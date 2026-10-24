@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pumo | Amazon and Etsy Listing Optimization for Revenue</title>
+<meta name="description" content="Pumo compares your Amazon or Etsy listing with the ones you compete against, scores it, and tells you exactly what to change first across creatives, pricing, reviews, and search rank.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf8f4;
+    --surface:#ffffff;
+    --surface-2:#f4f1ea;
+    --ink:#101f18;
+    --ink-soft:#243b30;
+    --muted:#59685f;
+    --line:#e7e2d8;
+    --line-strong:#d8d2c5;
+    --accent:#1e5b3e;
+    --accent-press:#174a32;
+    --mint:#34d399;
+    --mint-soft:#d9f7e9;
+    --grad:linear-gradient(135deg,#1e5b3e 0%,#2f9f6b 55%,#34d399 100%);
+    --grad-dark:linear-gradient(160deg,#0d2a1d 0%,#123a28 60%,#1e5b3e 100%);
+    --radius:16px;
+    --radius-sm:11px;
+    --shadow-sm:0 1px 2px rgba(16,31,24,.06), 0 1px 1px rgba(16,31,24,.04);
+    --shadow:0 18px 48px -24px rgba(16,31,24,.35);
+    --shadow-lift:0 30px 70px -30px rgba(16,31,24,.45);
+    --wrap:1080px;
+    --pad:24px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
+  .eyebrow{
+    font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);
+  }
+  .muted{color:var(--muted)}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    font-weight:600;font-size:15px;line-height:1;white-space:nowrap;
+    padding:14px 22px;border-radius:12px;border:1px solid transparent;cursor:pointer;
+    transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px -12px rgba(30,91,62,.75)}
+  .btn-primary:hover{background:var(--accent-press);transform:translateY(-1px);box-shadow:0 16px 30px -14px rgba(30,91,62,.8)}
+  .btn-ghost{background:var(--surface);color:var(--ink);border-color:var(--line-strong)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-sm{padding:10px 16px;font-size:14px;border-radius:10px}
+  .btn-lg{padding:16px 26px;font-size:16px}
+
+  /* ---------- Nav ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(250,248,244,.82);
+    backdrop-filter:saturate(1.6) blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;gap:28px;height:68px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.01em}
+  .brand .mark{
+    width:30px;height:30px;border-radius:9px;background:var(--grad);
+    display:grid;place-items:center;color:#06281a;font-weight:900;font-size:17px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.35), 0 6px 14px -6px rgba(52,211,153,.7);
+  }
+  .nav-links{display:flex;gap:26px;margin-left:8px}
+  .nav-links a{font-size:14.5px;font-weight:500;color:var(--ink-soft)}
+  .nav-links a:hover{color:var(--accent)}
+  .nav-cta{margin-left:auto;display:flex;align-items:center;gap:14px}
+  .nav-cta .signin{font-size:14.5px;font-weight:500;color:var(--ink-soft)}
+  .nav-cta .signin:hover{color:var(--accent)}
+  .menu-btn{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:5px;padding:8px}
+  .menu-btn span{width:22px;height:2px;background:var(--ink);border-radius:2px}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:72px 0 40px;position:relative;overflow:hidden}
+  .hero::before{
+    content:"";position:absolute;inset:-20% -10% auto -10%;height:520px;
+    background:radial-gradient(60% 120% at 80% 0%, rgba(52,211,153,.16), transparent 60%),
+               radial-gradient(50% 100% at 10% 10%, rgba(30,91,62,.10), transparent 55%);
+    pointer-events:none;
+  }
+  .hero-grid{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+  .hero h1{
+    font-size:clamp(38px,5.2vw,60px);line-height:1.04;letter-spacing:-.025em;font-weight:800;
+    margin:16px 0 18px;max-width:14ch;
+  }
+  .hero h1 .hl{
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{font-size:18px;color:var(--muted);max-width:46ch;margin-bottom:26px}
+
+  /* Audit input: THE fix. Clear gap between field and button. */
+  .audit{
+    background:var(--surface);border:1px solid var(--line-strong);border-radius:16px;
+    padding:10px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow-sm);
+    max-width:560px;
+  }
+  .audit input{
+    flex:1;min-width:0;border:0;outline:0;background:transparent;
+    font-family:inherit;font-size:15.5px;color:var(--ink);padding:10px 8px 10px 12px;
+  }
+  .audit input::placeholder{color:#97a29a}
+  .audit .btn-primary{flex:none}
+  .trial-note{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13.5px;color:var(--muted)}
+  .trial-note .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 4px var(--mint-soft)}
+  .hero-alt{margin-top:10px;font-size:13.5px}
+  .hero-alt a{color:var(--accent);font-weight:600;border-bottom:1px solid rgba(30,91,62,.25)}
+
+  /* Hero dashboard mock */
+  .mock{
+    background:var(--grad-dark);border-radius:20px;padding:16px;box-shadow:var(--shadow-lift);
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .mock-bar{display:flex;align-items:center;gap:7px;padding:4px 6px 12px}
+  .mock-bar i{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.25);display:block}
+  .mock-bar i:nth-child(1){background:#ff6f59}.mock-bar i:nth-child(2){background:#ffcf5c}.mock-bar i:nth-child(3){background:#45d98a}
+  .mock-chip{margin-left:auto;font-size:11px;color:rgba(255,255,255,.65);background:rgba(255,255,255,.08);padding:4px 10px;border-radius:999px}
+  .mock-card{background:#fff;border-radius:14px;padding:16px;color:var(--ink)}
+  .mock-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+  .mock-title{font-weight:700;font-size:15px}
+  .mock-meta{font-size:12px;color:var(--muted)}
+  .mock-tag{font-size:11px;font-weight:700;color:var(--accent);background:var(--mint-soft);padding:4px 9px;border-radius:999px}
+  .mock-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .stat{background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:10px 11px}
+  .stat .k{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+  .stat .v.good{color:var(--accent)}
+  .mock-rows{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+  .mrow{display:flex;align-items:center;gap:10px;font-size:13px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .mrow .pri{margin-left:auto;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px}
+  .pri.high{background:#fde8e4;color:#b4432d}.pri.med{background:#fff1d6;color:#9a6a12}
+  .mrow .ic{width:20px;height:20px;border-radius:6px;background:var(--mint-soft);color:var(--accent);display:grid;place-items:center;font-weight:800;font-size:12px}
+
+  /* ---------- Marquee / trust ---------- */
+  .trust{padding:34px 0 10px}
+  .trust-line{text-align:center;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .trust-row{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap}
+  .trust-item{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--ink-soft)}
+  .trust-item .m{width:26px;height:26px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font-size:14px;color:var(--accent)}
+  .trust-sub{text-align:center;margin-top:16px;color:var(--muted);font-size:15px}
+
+  /* ---------- Section scaffolding ---------- */
+  section.band{padding:72px 0}
+  .sec-head{max-width:620px;margin-bottom:40px}
+  .sec-head h2{font-size:clamp(28px,3.6vw,40px);line-height:1.08;letter-spacing:-.025em;font-weight:800;margin:12px 0 12px}
+  .sec-head p{font-size:17px;color:var(--muted)}
+  .center{margin-left:auto;margin-right:auto;text-align:center}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+  .step .num{font-size:13px;font-weight:800;color:var(--mint);letter-spacing:.1em}
+  .step h3{font-size:19px;margin:12px 0 8px;letter-spacing:-.01em}
+  .step p{font-size:14.5px;color:var(--muted)}
+  .step .tag{display:inline-block;margin-top:14px;font-size:12px;font-weight:700;color:var(--accent);background:var(--mint-soft);padding:5px 11px;border-radius:999px}
+  .step::after{content:"";position:absolute;left:0;top:0;height:3px;width:100%;background:var(--grad);opacity:.9}
+
+  /* features */
+  .features{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .feature{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm);transition:transform .18s ease, box-shadow .2s ease}
+  .feature:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .feature .fic{width:44px;height:44px;border-radius:12px;background:var(--grad);display:grid;place-items:center;color:#06281a;font-weight:900;font-size:20px;margin-bottom:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+  .feature h3{font-size:20px;letter-spacing:-.01em;margin-bottom:8px}
+  .feature p{font-size:15px;color:var(--muted)}
+  .feature ul{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:9px}
+  .feature li{font-size:14px;color:var(--ink-soft);display:flex;gap:10px;align-items:flex-start}
+  .feature li .ck{color:var(--accent);font-weight:800;flex:none}
+
+  /* categories */
+  .cats{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .cat{font-size:14px;font-weight:600;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:9px 16px}
+
+  /* comparison */
+  .compare{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
+  .compare .row{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:0;align-items:center}
+  .compare .row>div{padding:15px 18px;font-size:14px}
+  .compare .head{background:var(--surface-2);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .compare .row+.row{border-top:1px solid var(--line)}
+  .compare .you{font-weight:700}
+  .compare .you-badge{display:inline-block;font-size:10px;font-weight:800;color:#fff;background:var(--accent);padding:2px 7px;border-radius:6px;margin-left:8px;vertical-align:middle}
+  .compare .score{font-weight:800;color:var(--accent)}
+  .compare .name{font-weight:600}
+
+  /* pricing / CTA band */
+  .offer{
+    position:relative;background:var(--grad-dark);border-radius:24px;padding:48px;color:#fff;overflow:hidden;
+    box-shadow:var(--shadow-lift);
+  }
+  .offer::before{content:"";position:absolute;inset:auto -10% -40% auto;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(52,211,153,.35),transparent 65%)}
+  .offer-grid{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+  .offer h2{font-size:clamp(26px,3.4vw,36px);line-height:1.1;letter-spacing:-.02em;margin-bottom:14px}
+  .offer p{color:rgba(255,255,255,.78);font-size:16px;max-width:42ch}
+  .offer .pill{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#bff3da;background:rgba(52,211,153,.14);border:1px solid rgba(52,211,153,.3);padding:6px 13px;border-radius:999px;margin-bottom:18px}
+  .offer-card{background:#fff;color:var(--ink);border-radius:16px;padding:26px}
+  .offer-card h3{font-size:17px;margin-bottom:4px}
+  .offer-card .price-sub{font-size:13.5px;color:var(--muted);margin-bottom:18px}
+  .offer-card ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:22px}
+  .offer-card li{font-size:14px;display:flex;gap:10px;align-items:flex-start;color:var(--ink-soft)}
+  .offer-card li .ck{color:var(--accent);font-weight:800;flex:none}
+  .offer-card .btn{width:100%}
+  .offer-card .fine{text-align:center;margin-top:12px;font-size:12px;color:var(--muted)}
+  .offer-card .seeplans{display:block;text-align:center;margin-top:14px;font-size:13px;color:var(--accent);font-weight:600}
+
+  /* FAQ */
+  .faq{display:grid;grid-template-columns:1fr 1fr;gap:16px 40px}
+  details.qa{border-bottom:1px solid var(--line);padding:4px 0}
+  details.qa summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 2px;font-weight:600;font-size:16px}
+  details.qa summary::-webkit-details-marker{display:none}
+  details.qa summary .pm{width:24px;height:24px;flex:none;border-radius:7px;border:1px solid var(--line-strong);display:grid;place-items:center;font-weight:700;color:var(--accent);transition:transform .2s ease, background .2s ease}
+  details.qa[open] summary .pm{transform:rotate(45deg);background:var(--mint-soft)}
+  details.qa p{padding:0 2px 18px;color:var(--muted);font-size:15px;max-width:52ch}
+
+  /* footer */
+  footer{background:var(--ink);color:#cfd8d2;padding:60px 0 34px;margin-top:20px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:30px}
+  .foot-brand .brand{color:#fff}
+  .foot-brand p{margin-top:14px;font-size:13.5px;color:#93a39a;max-width:30ch}
+  .foot-col h4{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#7d8e85;margin-bottom:14px}
+  .foot-col a{display:block;font-size:14px;color:#c3cec8;margin-bottom:10px}
+  .foot-col a:hover{color:var(--mint)}
+  .foot-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:44px;padding-top:22px;border-top:1px solid rgba(255,255,255,.08);font-size:13px;color:#8b9b92}
+
+  /* ---------- Responsive ---------- */
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:40px}
+    .hero{padding:52px 0 30px}
+    .offer-grid{grid-template-columns:1fr;gap:28px}
+    .faq{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .foot-brand{grid-column:1 / -1}
+    .nav-links,.nav-cta .signin{display:none}
+    .menu-btn{display:flex}
+  }
+  @media(max-width:760px){
+    .steps{grid-template-columns:1fr}
+    .features{grid-template-columns:1fr}
+    .compare .row{grid-template-columns:1.4fr 1fr 1fr}
+    .compare .c-hide{display:none}
+    section.band{padding:54px 0}
+    .offer{padding:32px}
+  }
+  @media(max-width:520px){
+    .audit{flex-direction:column;align-items:stretch;gap:8px}
+    .audit .btn-primary{width:100%}
+    .trust-row{gap:22px}
+    .foot-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top"><span class="mark">p</span> pumo</a>
+    <nav class="nav-links">
+      <a href="#how">Product</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">Resources</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="signin" href="#">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="#audit">Start free</a>
+    </div>
+    <button class="menu-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Listing optimization for Amazon and Etsy</span>
+      <h1>Turn one ASIN into a listing that <span class="hl">outsells</span> its competitors.</h1>
+      <p class="hero-sub">Pumo compares your Amazon or Etsy listing with the ones you are up against, shows exactly what is missing, and ranks what to change first across creatives, pricing, reviews, and category position.</p>
+
+      <div class="audit" id="audit">
+        <input type="text" placeholder="Paste an Amazon ASIN, Amazon URL, or Etsy listing URL" aria-label="Amazon ASIN or listing URL">
+        <a class="btn btn-primary" href="#">Audit my listing</a>
+      </div>
+      <div class="trial-note"><span class="dot"></span> 3-day free trial. Card required. Cancel anytime.</div>
+      <div class="hero-alt">Not sure what to paste? <a href="#how">See how an audit works.</a></div>
+    </div>
+
+    <!-- Illustrative product mock (sample data, not a customer) -->
+    <div class="mock" aria-hidden="true">
+      <div class="mock-bar"><i></i><i></i><i></i><span class="mock-chip">pumo.app</span></div>
+      <div class="mock-card">
+        <div class="mock-head">
+          <div>
+            <div class="mock-title">Sample soy candle, 8 oz</div>
+            <div class="mock-meta">Amazon US · sample listing</div>
+          </div>
+          <span class="mock-tag">Listing score 7.4</span>
+        </div>
+        <div class="mock-stats">
+          <div class="stat"><div class="k">Open gaps</div><div class="v good">11</div></div>
+          <div class="stat"><div class="k">Avg rank</div><div class="v">4.2</div></div>
+          <div class="stat"><div class="k">Rating</div><div class="v">4.6</div></div>
+          <div class="stat"><div class="k">Reviews</div><div class="v">218</div></div>
+        </div>
+        <div class="mock-rows">
+          <div class="mrow"><span class="ic">1</span> Add a short product video <span class="pri high">High</span></div>
+          <div class="mrow"><span class="ic">2</span> Show the product at scale <span class="pri med">Medium</span></div>
+          <div class="mrow"><span class="ic">3</span> Show it in a real setting <span class="pri med">Medium</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust">
+  <div class="wrap">
+    <div class="trust-line">Works on the world's top marketplaces</div>
+    <div class="trust-row">
+      <div class="trust-item"><span class="m">a</span> Amazon brands</div>
+      <div class="trust-item"><span class="m">E</span> Etsy sellers</div>
+    </div>
+    <p class="trust-sub">Built for sellers who want answers, not another dashboard to babysit.</p>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="band" id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">The optimization loop</span>
+      <h2>Watch, decide, make. On repeat.</h2>
+      <p>Pumo replaces the research tools, spreadsheets, freelancers, and photographers you stitch together, with a single loop that keeps your listing ahead of the set you compete with.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01 / WATCH</div>
+        <h3>Competitor Radar</h3>
+        <p>We find the listings competing for the same shopper and track every move they make, from new photos and video to price cuts and fresh reviews.</p>
+        <span class="tag">Always on</span>
+      </div>
+      <div class="step">
+        <div class="num">02 / DECIDE</div>
+        <h3>Listing Checkup</h3>
+        <p>We score your listing against that set and hand you a ranked list of what to change first, so you spend effort where it moves revenue.</p>
+        <span class="tag">Ranked by impact</span>
+      </div>
+      <div class="step">
+        <div class="num">03 / MAKE</div>
+        <h3>Asset Studio</h3>
+        <p>We turn your product photos into the creatives the listing is missing, and always produce a brief in case you want your photographer to shoot instead.</p>
+        <span class="tag">Images, video, briefs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="band" id="features" style="background:var(--surface-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">What Pumo does</span>
+      <h2>See what is holding your listing back, then fix it.</h2>
+      <p>We analyze your images, video, price, and reviews against the competition and give you single-click actions to close the gaps.</p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="fic">&#9680;</div>
+        <h3>Listing audit and score</h3>
+        <p>A clear grade out of 10 against the listings you actually compete with, plus the reason behind every point you are leaving on the table.</p>
+        <ul>
+          <li><span class="ck">&#10003;</span> How you rank against your competitive set</li>
+          <li><span class="ck">&#10003;</span> Missing photos, video, keywords, and price gaps</li>
+          <li><span class="ck">&#10003;</span> A prioritized to-do list, highest impact first</li>
+        </ul>
+      </div>
+      <div class="feature">
+        <div class="fic">&#9733;</div>
+        <h3>Creative generation</h3>
+        <p>Size shot missing? We make it. Burn time buried in the description? We put it on an image. No listing video? We build a short one from your stills.</p>
+        <ul>
+          <li><span class="ck">&#10003;</span> Hero, scale, lifestyle, and infographic shots</li>
+          <li><span class="ck">&#10003;</span> Short product video from your existing photos</li>
+          <li><span class="ck">&#10003;</span> A shoot brief for your photographer, every time</li>
+        </ul>
+      </div>
+      <div class="feature">
+        <div class="fic">&#9681;</div>
+        <h3>Competitor tracking</h3>
+        <p>We decode what competing listings are doing better, from creatives to pricing to reviews, and flag the moves worth matching.</p>
+        <ul>
+          <li><span class="ck">&#10003;</span> Who you are really up against, found for you</li>
+          <li><span class="ck">&#10003;</span> Price, review, and image changes as they happen</li>
+          <li><span class="ck">&#10003;</span> Side-by-side on price, rating, reviews, and score</li>
+        </ul>
+      </div>
+      <div class="feature">
+        <div class="fic">&#9906;</div>
+        <h3>Search rank</h3>
+        <p>Pumo watches the searches that matter for your product and shows where you land between sponsored and organic results for each one.</p>
+        <ul>
+          <li><span class="ck">&#10003;</span> The real queries buyers use to find products like yours</li>
+          <li><span class="ck">&#10003;</span> Your position per query, tracked over time</li>
+          <li><span class="ck">&#10003;</span> What to change to climb, based on what ranks</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:40px">
+      <div class="trust-line" style="text-align:left;margin-bottom:14px">Works across popular categories</div>
+      <div class="cats">
+        <span class="cat">Home and Kitchen</span>
+        <span class="cat">Beauty and Personal Care</span>
+        <span class="cat">Pet Supplies</span>
+        <span class="cat">Sports and Outdoors</span>
+        <span class="cat">Baby and Kids</span>
+        <span class="cat">Food and Coffee</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Competitor comparison</span>
+      <h2>Know exactly where you stand.</h2>
+      <p>An illustrative view of how Pumo lines your listing up against the set competing for the same shopper.</p>
+    </div>
+    <div class="compare">
+      <div class="row head">
+        <div>Listing</div><div>Price</div><div>Rating</div><div class="c-hide">Reviews</div><div>Score</div>
+      </div>
+      <div class="row">
+        <div class="you">Your listing <span class="you-badge">YOU</span></div>
+        <div>$28.00</div><div>4.6</div><div class="c-hide">218</div><div class="score">7.4</div>
+      </div>
+      <div class="row">
+        <div class="name">Competitor A</div>
+        <div>$16.00</div><div>4.8</div><div class="c-hide">1,847</div><div class="score">9.1</div>
+      </div>
+      <div class="row">
+        <div class="name">Competitor B</div>
+        <div>$19.99</div><div>4.7</div><div class="c-hide">312</div><div class="score">8.6</div>
+      </div>
+    </div>
+    <p class="muted" style="font-size:13px;margin-top:14px">Sample data shown for illustration. Your audit uses your live listing and its real competitive set.</p>
+  </div>
+</section>
+
+<!-- PRICING / OFFER -->
+<section class="band" id="pricing">
+  <div class="wrap">
+    <div class="offer">
+      <div class="offer-grid">
+        <div>
+          <span class="pill">Start with your listing</span>
+          <h2>Paste one ASIN. Get your first audit free.</h2>
+          <p>Drop in an Amazon ASIN, an Amazon URL, or an Etsy listing URL. Pumo finds the product, its likely competitors, pricing, reviews, and creative, then shows you what to change first.</p>
+        </div>
+        <div class="offer-card">
+          <h3>Pumo Pro</h3>
+          <div class="price-sub">Full access, starting with a 3-day free trial.</div>
+          <ul>
+            <li><span class="ck">&#10003;</span> Unlimited listing audits and scores</li>
+            <li><span class="ck">&#10003;</span> Competitor Radar and change alerts</li>
+            <li><span class="ck">&#10003;</span> Creative generation and shoot briefs</li>
+            <li><span class="ck">&#10003;</span> Search rank tracking on your queries</li>
+          </ul>
+          <a class="btn btn-primary btn-lg" href="#audit">Start 3-day free trial</a>
+          <div class="fine">Card required. Cancel anytime before it ends.</div>
+          <a class="seeplans" href="#">See full pricing &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="band" id="faq" style="background:var(--surface-2);border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow">Frequently asked questions</span>
+      <h2>Good questions, straight answers.</h2>
+    </div>
+    <div class="faq">
+      <div>
+        <details class="qa" open>
+          <summary>How do you know what to change? <span class="pm">+</span></summary>
+          <p>We compare your listing with the ones competing for the same shopper, including photos, video, reviews, and price. Then we pick the changes that look worth making and rank them by impact.</p>
+        </details>
+        <details class="qa">
+          <summary>What if my listing is already fine? <span class="pm">+</span></summary>
+          <p>Then your audit confirms it, and Radar keeps watching the set so you hear about it the moment a competitor makes a move that changes the picture.</p>
+        </details>
+        <details class="qa">
+          <summary>Do I need to connect Seller Central? <span class="pm">+</span></summary>
+          <p>No. An ASIN or listing URL is enough to run your first audit. Connecting more data only makes the recommendations sharper.</p>
+        </details>
+      </div>
+      <div>
+        <details class="qa">
+          <summary>Will my creatives look AI generated? <span class="pm">+</span></summary>
+          <p>They are built from your own product photos to match your listing, and you always get a brief so your photographer can shoot the same shot instead.</p>
+        </details>
+        <details class="qa">
+          <summary>Do I own the images and video? <span class="pm">+</span></summary>
+          <p>Yes. Everything Pumo creates for your listing is yours to use, keep, and publish wherever you sell.</p>
+        </details>
+        <details class="qa">
+          <summary>What if I do not have a listing yet? <span class="pm">+</span></summary>
+          <p>Start from a competitor you want to beat. Pumo shows you the creative and content jobs a strong listing in your category needs to cover.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#top"><span class="mark">p</span> pumo</a>
+        <p>Amazon and Etsy listing optimization that grows revenue, not just visits.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#">Affiliates</a>
+      </div>
+      <div class="foot-col">
+        <h4>Tools</h4>
+        <a href="#">All tools</a>
+        <a href="#">Amazon FBA Calculator</a>
+        <a href="#">Amazon Fee Calculator</a>
+        <a href="#">Etsy Fee Calculator</a>
+        <a href="#">Amazon Image Requirements</a>
+      </div>
+      <div class="foot-col">
+        <h4>Resources</h4>
+        <a href="#">Blog</a>
+        <a href="#">Alternatives</a>
+        <a href="#">Best tools</a>
+        <a href="#">About</a>
+      </div>
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookie settings</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Pumo. All rights reserved.</span>
+      <span>Made for sellers who optimize for revenue.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
